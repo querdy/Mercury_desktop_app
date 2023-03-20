@@ -3,8 +3,8 @@
     |
     <router-link to="/">Research</router-link>
     |
-<!--    <router-link to="/vse">VSE</router-link>-->
-<!--    |-->
+    <router-link to="/vse">VSE</router-link>
+    |
     <router-link to="/settings">Settings</router-link>
     |
   </nav>

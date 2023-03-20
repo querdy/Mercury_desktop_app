@@ -73,7 +73,7 @@ class ResearchSchema(CamelModel):
         raise ValueError('Длина строки не должна превышать 255 символов')
 
 
-class EnterpriseSchema(CamelModel):
+class EnterpriseForResearchSchema(CamelModel):
     uuid: Optional[int]
     name: str
     researches: list[ResearchSchema]

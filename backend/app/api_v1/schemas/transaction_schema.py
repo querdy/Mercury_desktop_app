@@ -40,3 +40,7 @@ class PushResearchSchema(CamelModel):
     transaction_pk: int
     traffic: TrafficMsgSchema
 
+
+class PushVseSchema(CamelModel):
+    enterprise_pk: str
+    transaction_pk: str

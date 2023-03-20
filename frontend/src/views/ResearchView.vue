@@ -120,12 +120,4 @@ p {
   text-align: left;
   /*margin: 10px;*/
 }
-
-.string_input {
-  margin: 5px;
-}
-
-.label {
-  margin: 5px;
-}
 </style>

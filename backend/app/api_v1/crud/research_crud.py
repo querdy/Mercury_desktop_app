@@ -1,30 +1,30 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.api_v1 import models
-from app.api_v1.models import Enterprise
-from app.api_v1.schemas.research_schema import EnterpriseSchema, ResearchSchema
+from app.api_v1.models import EnterpriseForResearch
+from app.api_v1.schemas.research_schema import EnterpriseForResearchSchema, ResearchSchema
 from app.db.database import Base
 
 
 def get_enterprise(db: Session, enterprise_uuid: int):
-    query = db.query(models.Enterprise).get(enterprise_uuid)
+    query = db.query(models.EnterpriseForResearch).get(enterprise_uuid)
     return query
 
 
 def get_enterprise_by_name(db: Session, enterprise_name: str):
-    query = db.query(models.Enterprise).filter_by(enterprise_name=enterprise_name).first()
+    query = db.query(models.EnterpriseForResearch).filter_by(enterprise_name=enterprise_name).first()
     return query
 
 
 def get_all_enterprise(db: Session):
-    query = db.query(models.Enterprise).all()
+    query = db.query(models.EnterpriseForResearch).all()
     return query
 
 
-def create_enterprise(db: Session, enterprise: EnterpriseSchema) -> Enterprise:
+def create_enterprise(db: Session, enterprise: EnterpriseForResearchSchema) -> EnterpriseForResearch:
     enterprise_dict = enterprise.dict()
     researches = enterprise_dict.pop("researches", [])
-    created_enterprise = models.Enterprise(**enterprise_dict)
+    created_enterprise = models.EnterpriseForResearch(**enterprise_dict)
 
     for research in researches:
         created_research = models.Research(**research)
@@ -43,8 +43,9 @@ def create_research(db: Session, research: ResearchSchema):
     return created_research
 
 
-def update_enterprise(db: Session, enterprise: EnterpriseSchema):
+def update_enterprise(db: Session, enterprise: EnterpriseForResearchSchema):
     enterprise_in_db = get_enterprise(db=db, enterprise_uuid=enterprise.uuid)
+
     enterprise_dict = enterprise.dict()
     enterprise_dict.pop('uuid', None)
 
@@ -66,13 +67,13 @@ def update_enterprise(db: Session, enterprise: EnterpriseSchema):
         else:
             created_research = models.Research(**research)
             enterprise_in_db.researches.append(created_research)
-    db.query(models.Enterprise).filter_by(uuid=enterprise.uuid).update(enterprise_dict)
+    db.query(models.EnterpriseForResearch).filter_by(uuid=enterprise.uuid).update(enterprise_dict)
     db.commit()
     return enterprise_in_db
 
 
 def delete_enterprise(db: Session, enterprise_uuid: int):
-    query = db.query(models.Enterprise).filter_by(uuid=enterprise_uuid).delete()
+    query = db.query(models.EnterpriseForResearch).filter_by(uuid=enterprise_uuid).delete()
     db.commit()
     return bool(query)
 

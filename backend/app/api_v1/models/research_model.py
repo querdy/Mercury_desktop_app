@@ -5,12 +5,12 @@ from sqlalchemy.types import ARRAY
 from app.db.database import Base
 
 
-class Enterprise(Base):
-    __tablename__ = "enterprise"
+class EnterpriseForResearch(Base):
+    __tablename__ = "enterprise_for_research"
 
     uuid = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True)
-    researches = relationship("Research", back_populates="enterprise")
+    researches = relationship("Research", back_populates="enterprise_for_research")
 
 
 class Research(Base):
@@ -25,8 +25,8 @@ class Research(Base):
     result = Column(String)
     conclusion = Column(String)
     product = Column(String)
-    enterprise_name = Column(ForeignKey("enterprise.name", ondelete="CASCADE"))
-    enterprise = relationship("Enterprise", back_populates="researches", uselist=False)
+    enterprise_name = Column(ForeignKey("enterprise_for_research.name", ondelete="CASCADE"))
+    enterprise_for_research = relationship("EnterpriseForResearch", back_populates="researches", uselist=False)
 
 
 def validate_research(research: Research) -> bool:
