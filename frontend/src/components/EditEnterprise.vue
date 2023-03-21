@@ -4,7 +4,7 @@
             @change="set_edited_enterprise(state.selected_uuid)">
       <option disabled value="null">Выберите</option>
       <option :value="enterprise.uuid" v-for="enterprise in state.enterprises" :key="enterprise">{{
-          enterprise.name
+        enterprise.name
         }}
       </option>
     </select>
@@ -53,7 +53,11 @@
             </select></td>
           <td>
             <input class="table-input" type="text"
-                     v-model="state.edited_enterprise.researches[indexResearch].conclusion">
+                   v-model="state.edited_enterprise.researches[indexResearch].conclusion">
+          </td>
+          <td>
+            <input class="align-middle m-1" type="image" v-bind:src="require('/src/assets/cross.png')" alt="cross"
+                   height="25" width="25" @click="delete_item(indexResearch)">
           </td>
         </tr>
         </tbody>
@@ -62,10 +66,6 @@
     <div class="d-inline m-1">
       <input v-if="state.edited_enterprise.name" type="button" value="Добавить исследование"
              @click="append_edited_research">
-    </div>
-    <div class="d-inline m-1">
-      <input v-if="state.edited_enterprise.name" type="button" value="Удалить исследование"
-             @click="pop_edited_research">
     </div>
     <hr v-if="state.edited_enterprise.name">
     <div v-if="state.edited_enterprise.name">
@@ -117,17 +117,14 @@ export default {
       })
     }
 
+    function delete_item(index) {
+      state.edited_enterprise.researches.splice(index, 1)
+    }
+
     function append_edited_research() {
       state.research_count++
       let newResearch = JSON.parse(JSON.stringify(state.emptyResearch))
       state.edited_enterprise.researches.push(newResearch)
-    }
-
-    function pop_edited_research() {
-      if (state.research_count > 1) {
-        state.research_count--
-        state.edited_enterprise.researches.pop()
-      }
     }
 
     function update_enterprise() {
@@ -171,9 +168,9 @@ export default {
       state,
       set_edited_enterprise,
       append_edited_research,
-      pop_edited_research,
       update_enterprise,
       delete_enterprise,
+      delete_item,
     }
   }
 }

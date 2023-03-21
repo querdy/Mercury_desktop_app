@@ -44,6 +44,10 @@
           </select></td>
           <td><input class="table-input" type="text" v-model="state.enterprise.researches[indexResearch].conclusion">
           </td>
+          <td>
+            <input class="align-middle m-1" type="image" v-bind:src="require('/src/assets/cross.png')" alt="cross"
+                   height="25" width="25" @click="delete_item(indexResearch)">
+          </td>
         </tr>
         </tbody>
       </table>
@@ -51,9 +55,6 @@
     <div>
       <div class="d-inline m-1">
         <input v-if="state.enterprise.name" type="button" value="Добавить исследование" @click="append_research">
-      </div>
-      <div class="d-inline m-1">
-        <input v-if="state.enterprise.name" type="button" value="Удалить исследование" @click="pop_research">
       </div>
     </div>
     <hr v-if="state.enterprise.name">
@@ -108,11 +109,8 @@ export default {
       state.enterprise.researches.push(newResearch)
     }
 
-    function pop_research() {
-      if (state.research_count > 0) {
-        state.research_count--
-        state.enterprise.researches.pop()
-      }
+    function delete_item(index) {
+      state.enterprise.researches.splice(index, 1)
     }
 
     function create_enterprise() {
@@ -138,8 +136,8 @@ export default {
     return {
       state,
       append_research,
-      pop_research,
       create_enterprise,
+      delete_item,
 
     }
   }

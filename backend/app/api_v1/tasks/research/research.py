@@ -73,11 +73,11 @@ def push_research(enterprise_uuid: int, transaction_pk: int, traffic: int, produ
                     '_action': 'addLaboratoryForm',
                     'realTrafficVUPk': traffic
                 })
-                return TrafficMsgSchema(traffic=traffic, product_name=product, status='Ok! ~special')
             else:
                 TrafficMsgSchema(traffic=traffic, product_name=product, status='Skipped')
-
-    if not is_added:
+    if is_added:
+        return TrafficMsgSchema(traffic=traffic, product_name=product, status='Ok! ~special')
+    else:
         for main_research in main_researches:
             if validate_research(research=main_research):
                 manager.client.session.fetch('https://mercury.vetrf.ru/gve/operatorui', data={
@@ -93,6 +93,6 @@ def push_research(enterprise_uuid: int, transaction_pk: int, traffic: int, produ
                     '_action': 'addLaboratoryForm',
                     'realTrafficVUPk': traffic
                 })
-                return TrafficMsgSchema(traffic=traffic, product_name=product, status='Ok! ~base')
             else:
                 return TrafficMsgSchema(traffic=traffic, product_name=product, status='Skipped')
+        return TrafficMsgSchema(traffic=traffic, product_name=product, status='Ok! ~base')

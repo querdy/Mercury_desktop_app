@@ -79,9 +79,7 @@ async def update_vse_targets_route(products: UpdateProductsSchema, db: Session =
 
 @router.post("/push_vse", status_code=status.HTTP_200_OK)
 async def push_vse_route(transaction: PushVseSchema = Body(), db: Session = Depends(get_db)):
-    # products = get_vse_products(transaction_pk='6061471893', db=db)
     products = get_vse_products(transaction_pk=transaction.transaction_pk, db=db)
-    # choose_enterprise(enterprise_pk='1176144')
     choose_enterprise(enterprise_pk=transaction.enterprise_pk)
     for product in products:
         target = get_active_product_target(db=db, product_name=product)
@@ -101,6 +99,3 @@ async def push_vse_route(transaction: PushVseSchema = Body(), db: Session = Depe
                      vse_guid=vse_guid
                      )
         save_vse(target_pk=target, vse_pk=vse_pk)
-        # save_vse(target_pk='481', vse_pk=vse_pk)
-        # save_vse(target_pk=product.vse_target, vse_pk=vse_pk)
-    # save_vse_targets(db=db, vse_targets=parse_target_list())
