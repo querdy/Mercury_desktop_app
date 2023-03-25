@@ -93,6 +93,5 @@ def push_research(enterprise_uuid: int, transaction_pk: int, traffic: int, produ
                     '_action': 'addLaboratoryForm',
                     'realTrafficVUPk': traffic
                 })
-            else:
-                return TrafficMsgSchema(traffic=traffic, product_name=product, status='Skipped')
-        return TrafficMsgSchema(traffic=traffic, product_name=product, status='Ok! ~base')
+                return TrafficMsgSchema(traffic=traffic, product_name=product, status='Ok! ~base')
+        return TrafficMsgSchema(traffic=traffic, product_name=product, status='Skipped')

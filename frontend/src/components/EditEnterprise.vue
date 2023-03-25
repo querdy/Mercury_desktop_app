@@ -1,6 +1,6 @@
 <template>
   <div>
-    <select class="m-1" style="height: 30px" v-model="state.selected_uuid"
+    <select id="enterpriseSelect" class="m-1" style="height: 30px" v-model="state.selected_uuid"
             @change="set_edited_enterprise(state.selected_uuid)">
       <option disabled value="null">Выберите предприятие</option>
       <option :value="enterprise.uuid" v-for="enterprise in state.enterprises" :key="enterprise">{{
@@ -34,18 +34,18 @@
           <td>
             <input class="table-input" type="text" v-model="state.edited_enterprise.researches[indexResearch].disease">
           </td>
-          <td>
+          <td style="width: 10%">
             <input class="table-input" type="text"
                    v-model="state.edited_enterprise.researches[indexResearch].dateOfResearch"></td>
-          <td>
+          <td style="width: 7%">
             <input class="table-input" type="text" v-model="state.edited_enterprise.researches[indexResearch].method">
           </td>
           <td>
             <input class="table-input" type="text"
                    v-model="state.edited_enterprise.researches[indexResearch].expertiseId">
           </td>
-          <td>
-            <select style="height: 27px" v-model="state.edited_enterprise.researches[indexResearch].result">
+          <td style="width: 7%">
+            <select style="height: 27px;" v-model="state.edited_enterprise.researches[indexResearch].result">
               <option disabled value="">Выберите</option>
               <option value="1">Positive</option>
               <option value="2">Negative</option>
@@ -173,8 +173,8 @@ p {
   margin-bottom: 0;
 }
 
-td select {
-  width: 20%;
-  height: 30px;
+#enterpriseSelect {
+  width: 25%;
+  /*height: 30px;*/
 }
 </style>
