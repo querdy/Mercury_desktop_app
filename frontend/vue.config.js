@@ -14,3 +14,13 @@ module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false
 })
+
+module.exports = {
+  pluginOptions: {
+    electronBuilder: {
+      builderOptions: {
+        productName: "Mercury Parser",
+      }
+    }
+  }
+}
