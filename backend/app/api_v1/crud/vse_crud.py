@@ -72,7 +72,10 @@ def get_active_vse_param(db: Session, product_name: str):
 
 def get_active_product_target(db: Session, product_name: str):
     query = db.query(models.Product).filter_by(product_name=product_name).first()
-    return query.vse_target
+    try:
+        return query.vse_target
+    except AttributeError:
+        return None
 
 
 def get_vse_param(db: Session):
