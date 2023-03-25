@@ -1,11 +1,9 @@
 <template>
-
   <div class="m-1 row">
-
     <div id="transaction_input" class="col-12">
       <label class="m-1">Номер транзакции: </label>
       <input class="m-1" type="text" @input="updateInput">
-      <select class="mx-1" style="height: 30px" v-model="state.selected_enterprise">
+      <select class="mx-1" v-model="state.selected_enterprise">
         <option value="" selected disabled>Выберите</option>
         <option :value="enterprise.uuid" v-for="enterprise in state.enterprises" :key="enterprise">{{
             enterprise.name
@@ -27,11 +25,10 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
-<script>
+<script setup>
 import {reactive} from "vue";
 import axios from "axios";
 import LoadingView from "@/components/LoadingView.vue";
@@ -39,81 +36,75 @@ import {useNotification} from "@kyvg/vue3-notification";
 
 const {notify} = useNotification()
 
-export default {
-  name: "ResearchView",
-  components: {LoadingView},
-  setup() {
-    const state = reactive({
-      isLoading: false,
-      input_transaction_pk: '',
-      selected_enterprise: '',
-      returned_transaction: {},
-      traffics: [],
-      enterprises: {},
+const state = reactive({
+  isLoading: false,
+  input_transaction_pk: '',
+  selected_enterprise: '',
+  returned_transaction: {},
+  traffics: [],
+  enterprises: {},
+})
+axios.get("http://127.0.0.1:8000/api/v1/research/enterprises")
+    .then((response) => {
+      state.enterprises = response.data
     })
-    axios.get("http://127.0.0.1:8000/api/v1/research/enterprises")
-        .then((response) => {
-          state.enterprises = response.data
-        })
 
 
-    function updateInput(event) {
-      state.input_transaction_pk = event.target.value
-    }
+function updateInput(event) {
+  state.input_transaction_pk = event.target.value
+}
 
-    function startIsClicked() {
-      state.complete = []
-      state.isLoading = true
-      axios.get('http://127.0.0.1:8000/api/v1/research/' + state.input_transaction_pk + '/' + state.selected_enterprise)
-          .then((response) => {
-            state.returned_transaction = response.data;
-            state.traffics = response.data.traffics;
-            state.isLoading = false
-            notify({
-              type: "success",
-              text: "Запущено внесение исследований",
-            });
-            state.traffics.forEach(traffic => {
-              axios.post('http://127.0.0.1:8000/api/v1/research/push_research', {
-                'enterpriseUuid': state.selected_enterprise,
-                'transactionPk': state.returned_transaction.transactionPk,
-                'traffic': {
-                  'traffic': traffic.traffic,
-                  'productName': traffic.productName,
-                  'status': traffic.status,
-                }
+function startIsClicked() {
+  state.complete = []
+  state.isLoading = true
+  axios.get('http://127.0.0.1:8000/api/v1/research/' + state.input_transaction_pk + '/' + state.selected_enterprise)
+      .then((response) => {
+        state.returned_transaction = response.data;
+        state.traffics = response.data.traffics;
+        state.isLoading = false
+        notify({
+          type: "success",
+          text: "Запущено внесение исследований",
+        });
+        state.traffics.forEach(traffic => {
+          axios.post('http://127.0.0.1:8000/api/v1/research/push_research', {
+            'enterpriseUuid': state.selected_enterprise,
+            'transactionPk': state.returned_transaction.transactionPk,
+            'traffic': {
+              'traffic': traffic.traffic,
+              'productName': traffic.productName,
+              'status': traffic.status,
+            }
+          })
+              .then((response) => {
+                state.traffics.forEach(traffic => {
+                  if (traffic.traffic === response.data.traffic) {
+                    traffic.status = response.data.status
+                  }
+                })
+                state.traffics[response.data.traffic] = response.data.traffic.status;
               })
-                  .then((response) => {
-                    state.traffics.forEach(traffic => {
-                      if (traffic.traffic === response.data.traffic) {
-                        traffic.status = response.data.status
-                      }
-                    })
-                    state.traffics[response.data.traffic] = response.data.traffic.status;
-                  })
-            })
-          })
-          .catch(() => {
-            state.isLoading = false
-            notify({
-              type: "error",
-              text: "Не удалось запустить внесение исследований",
-            });
-          })
-    }
+        })
+      })
+      .catch(() => {
+        state.isLoading = false
+        notify({
+          type: "error",
+          text: "Не удалось запустить внесение исследований",
+        });
+      })
 
-    return {
-      state,
-      updateInput,
-      startIsClicked
-    }
-  }
 }
 </script>
 
 <style scoped>
 p {
   display: inline-block;
+}
+
+select {
+  width: 20%;
+  height: 30px;
 }
 
 #transaction_input {

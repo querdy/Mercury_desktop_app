@@ -2,13 +2,9 @@
   <span v-if="$props.isLoading" class="loader"></span>
 </template>
 
-<script>
-export default {
-  name: "LoadingView",
-  props: {
-    isLoading: {type: Boolean, default: false}
-  },
-}
+<script setup>
+// eslint-disable-next-line no-undef
+defineProps(['isLoading'])
 </script>
 
 <style scoped>

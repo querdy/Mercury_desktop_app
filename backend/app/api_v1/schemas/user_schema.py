@@ -14,5 +14,12 @@ class UserSchema(CamelModel):
         orm_mode = True
 
 
+class ActiveUserSchema(CamelModel):
+    login: str
+
+    class Config:
+        orm_mode = True
+
+
 class UserDeleteSchema(CamelModel):
     login: str

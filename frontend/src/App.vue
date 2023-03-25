@@ -1,5 +1,5 @@
 <template>
-  <navbar />
+  <navbar class="shadow-sm p-1 mb-3 bg-body-tertiary rounded" />
   <router-view />
   <notifications position="bottom left" />
 </template>
@@ -18,4 +18,20 @@
 
 <script setup>
 import Navbar from "@/components/NavbarView.vue";
+import {reactive} from "vue";
+import axios from "axios";
+
+const state = reactive({
+  user: "",
+})
+
+getActiveUser()
+
+function getActiveUser() {
+  axios.get("http://localhost:8000/api/v1/user/active")
+      .then((response) => {
+        state.user = response.data.login
+      })
+}
+
 </script>

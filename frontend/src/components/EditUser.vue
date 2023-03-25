@@ -29,101 +29,94 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {getActiveUser} from "@/components/ActiveUser";
 import {reactive} from "vue";
 import axios from "axios";
 import LoadingView from "@/components/LoadingView.vue";
 import {useNotification} from "@kyvg/vue3-notification";
 
 const {notify} = useNotification()
-export default {
-  name: "EditUser",
-  components: {LoadingView},
+const state = reactive({
+  isLoading: false,
+  user: {
+    login: '',
+    password: ''
+  },
+  users: [],
+  selected_user: ''
+})
 
-  setup() {
-    const state = reactive({
-      isLoading: false,
-      user: {
-        login: '',
-        password: ''
-      },
-      users: [],
-      selected_user: ''
-    })
-
-    function updateUserList() {
-      axios.get("http://127.0.0.1:8000/api/v1/user/all")
-          .then((response) => {
-            state.users = response.data
-          })
-    }
-
-    updateUserList()
-
-    function update_user() {
-      state.isLoading = true
-      axios.post("http://127.0.0.1:8000/api/v1/user/check", state.user)
-          .then(() => {
-            notify({
-              type: "success",
-              text: "Авторизация прошла успешно",
-            });
-          })
-          .catch(() => {
-            notify({
-              type: "error",
-              text: "Неудачная авторизация",
-            });
-          })
-          .finally(() => {
-            state.isLoading = false
-            updateUserList()
-          })
-    }
-
-    function switch_user() {
-      axios.get("http://127.0.0.1:8000/api/v1/user/set/" + state.selected_user)
-          .then(() => {
-            notify({
-              type: "success",
-              text: "Активный пользователь изменен на " + state.selected_user,
-            });
-          })
-          .catch(() => {
-            notify({
-              type: "error",
-              text: "Не удалось изменить активного пользователя",
-            });
-          })
-    }
-
-    function delete_user() {
-      axios.delete("http://127.0.0.1:8000/api/v1/user/", {data: {"login": state.selected_user}})
-          .then(() => {
-            notify({
-              type: "success",
-              text: "Пользователь " + state.selected_user + " удален",
-            });
-          })
-          .catch(() => {
-            notify({
-              type: "error",
-              text: "Не удалось удалить пользователя. Обновите страницу и попробуйте снова",
-            });
-          })
-          .finally(() => {
-            updateUserList()
-          })
-    }
-
-    return {
-      state,
-      update_user,
-      switch_user,
-      delete_user,
-    }
-  }
+function updateUserList() {
+  axios.get("http://127.0.0.1:8000/api/v1/user/all")
+      .then((response) => {
+        state.users = response.data
+      })
 }
+
+updateUserList()
+
+function update_user() {
+  state.isLoading = true
+  axios.post("http://127.0.0.1:8000/api/v1/user/check", state.user)
+      .then(() => {
+        notify({
+          type: "success",
+          text: "Авторизация прошла успешно",
+        });
+      })
+      .catch(() => {
+        notify({
+          type: "error",
+          text: "Неудачная авторизация",
+        });
+      })
+      .finally(() => {
+        state.isLoading = false
+        updateUserList()
+        getActiveUser()
+      })
+}
+
+function switch_user() {
+  axios.get("http://127.0.0.1:8000/api/v1/user/set/" + state.selected_user)
+      .then(() => {
+        notify({
+          type: "success",
+          text: "Активный пользователь изменен на " + state.selected_user,
+        });
+      })
+      .catch(() => {
+        notify({
+          type: "error",
+          text: "Не удалось изменить активного пользователя",
+        });
+      })
+      .finally(() => {
+        getActiveUser()
+      })
+}
+
+function delete_user() {
+  axios.delete("http://127.0.0.1:8000/api/v1/user/", {data: {"login": state.selected_user}})
+      .then(() => {
+        notify({
+          type: "success",
+          text: "Пользователь " + state.selected_user + " удален",
+        });
+      })
+      .catch(() => {
+        notify({
+          type: "error",
+          text: "Не удалось удалить пользователя. Обновите страницу и попробуйте снова",
+        });
+      })
+      .finally(() => {
+        updateUserList()
+        getActiveUser()
+      })
+}
+
 </script>
 
 <style scoped>

@@ -17,7 +17,8 @@
             RU <input class="table-input" style="width: 85%" type="text" v-model="state.enterprises[index].mercuryId">
           </td>
           <td>
-            <input class="align-middle m-1" type="image" v-bind:src="require('/src/assets/cross.png')" alt="cross" height="25" width="25" @click="delete_item(index)">
+            <input class="align-middle m-1" type="image" v-bind:src="require('/src/assets/cross.png')" alt="cross"
+                   height="25" width="25" @click="delete_item(index)">
           </td>
         </tr>
         </tbody>
@@ -32,59 +33,48 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {reactive} from "vue";
 import axios from "axios";
 import {useNotification} from "@kyvg/vue3-notification";
-const { notify}  = useNotification()
 
-export default {
-  name: "EditVseEnterprises",
+const {notify} = useNotification()
 
-  setup() {
-    const state = reactive({
-      enterprises: [],
-      emptyEnterprise: {
-        uuid: null,
-        name: '',
-        mercuryId: '',
-      }
+const state = reactive({
+  enterprises: [],
+  emptyEnterprise: {
+    uuid: null,
+    name: '',
+    mercuryId: '',
+  }
+})
+
+axios.get("http://127.0.0.1:8000/api/v1/vse/enterprise")
+    .then((response) => {
+      state.enterprises = response.data
     })
 
-    axios.get("http://127.0.0.1:8000/api/v1/vse/enterprise")
-        .then((response) => {
-          state.enterprises = response.data
-        })
-
-    function append_enterprise() {
-      let newEnterprise = JSON.parse(JSON.stringify(state.emptyEnterprise))
-      state.enterprises.push(newEnterprise)
-    }
-
-    function delete_item(index) {
-      state.enterprises.splice(index, 1)
-    }
-
-    function push_update() {
-      axios.post("http://127.0.0.1:8000/api/v1/vse/enterprise", {"enterprises": state.enterprises})
-          .then((response) => {
-            if (response.status === 201) {
-              notify({
-                type: "success",
-                text: "Список предприятий спешно изменен",
-              });
-            }
-          })
-    }
-
-    return {
-      state,
-      append_enterprise,
-      delete_item,
-      push_update,
-    }
-  }
+function append_enterprise() {
+  let newEnterprise = JSON.parse(JSON.stringify(state.emptyEnterprise))
+  state.enterprises.push(newEnterprise)
 }
+
+function delete_item(index) {
+  state.enterprises.splice(index, 1)
+}
+
+function push_update() {
+  axios.post("http://127.0.0.1:8000/api/v1/vse/enterprise", {"enterprises": state.enterprises})
+      .then((response) => {
+        if (response.status === 201) {
+          notify({
+            type: "success",
+            text: "Список предприятий спешно изменен",
+          });
+        }
+      })
+}
+
 </script>
 
 <style scoped>

@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {reactive} from "vue";
 import axios from "axios";
 import LoadingView from "@/components/LoadingView.vue";
@@ -24,54 +24,43 @@ import {useNotification} from "@kyvg/vue3-notification";
 
 const {notify} = useNotification()
 
-export default {
-  name: "VSEView",
-  components: {LoadingView},
-  setup() {
-    const state = reactive({
-      isLoading: false,
-      input_transaction_pk: '',
-      selected_enterprise: '',
+const state = reactive({
+  isLoading: false,
+  input_transaction_pk: '',
+  selected_enterprise: '',
+})
+axios.get("http://127.0.0.1:8000/api/v1/vse/enterprise")
+    .then((response) => {
+      state.enterprises = response.data
     })
-    axios.get("http://127.0.0.1:8000/api/v1/vse/enterprise")
-        .then((response) => {
-          state.enterprises = response.data
-        })
 
-    function updateInput(event) {
-      state.input_transaction_pk = event.target.value
-    }
-
-    function startIsClicked() {
-      state.isLoading = true
-      axios.post("http://127.0.0.1:8000/api/v1/vse/push_vse", {
-        "enterprisePk": state.selected_enterprise,
-        "transactionPk": state.input_transaction_pk,
-      })
-          .then(() => {
-            state.isLoading = false
-            notify({
-              type: "success",
-              text: "Запущено внесение ВСЭ",
-            });
-
-          })
-          .catch(() => {
-            state.isLoading = false
-            notify({
-              type: "error",
-              text: "Не удалось запустить внесение ВСЭ",
-            });
-          })
-    }
-
-    return {
-      state,
-      updateInput,
-      startIsClicked,
-    }
-  }
+function updateInput(event) {
+  state.input_transaction_pk = event.target.value
 }
+
+function startIsClicked() {
+  state.isLoading = true
+  axios.post("http://127.0.0.1:8000/api/v1/vse/push_vse", {
+    "enterprisePk": state.selected_enterprise,
+    "transactionPk": state.input_transaction_pk,
+  })
+      .then(() => {
+        state.isLoading = false
+        notify({
+          type: "success",
+          text: "Запущено внесение ВСЭ",
+        });
+
+      })
+      .catch(() => {
+        state.isLoading = false
+        notify({
+          type: "error",
+          text: "Не удалось запустить внесение ВСЭ",
+        });
+      })
+}
+
 
 </script>
 
@@ -79,6 +68,11 @@ export default {
 <style scoped>
 p {
   display: inline-block;
+}
+
+select {
+  width: 20%;
+  height: 30px;
 }
 
 #transaction_input {

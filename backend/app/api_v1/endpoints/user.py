@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from starlette import status
 from starlette.responses import JSONResponse
 
-from app.api_v1.crud.user_crud import save_user, read_cookies, get_users, set_active_user, delete_user
-from app.api_v1.schemas.user_schema import UserSchema, UserDeleteSchema
+from app.api_v1.crud.user_crud import save_user, read_cookies, get_users, set_active_user, delete_user, get_active_user
+from app.api_v1.schemas.user_schema import UserSchema, UserDeleteSchema, ActiveUserSchema
 from app.api_v1.services.mercury import manager
 from app.db.database import get_db
 
@@ -42,6 +42,14 @@ async def set_active_user_route(login: str, db: Session = Depends(get_db)):
         set_active_user(db=db, login=login)
     except:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+
+
+@router.get("/active", status_code=status.HTTP_200_OK, response_model=ActiveUserSchema)
+async def get_active_user_route(db: Session = Depends(get_db)):
+    user = get_active_user(db=db)
+    if user is None:
+        return ActiveUserSchema(login='Нет активного пользователя')
+    return user
 
 
 @router.delete("/", status_code=status.HTTP_200_OK)
