@@ -12,6 +12,7 @@
           </option>
         </select>
         <input class="m-1" type="button" value="Собрать данные о продукции" @click="startIsClicked">
+        <LoadingView class="m-1 mx-2" :is-loading="state.isLoading"/>
       </div>
       <table class="m-1 table table-bordered table-sm">
         <thead>
@@ -66,6 +67,7 @@
 import {reactive} from "vue";
 import axios from "axios";
 import {useNotification} from "@kyvg/vue3-notification";
+import LoadingView from "@/components/LoadingView.vue";
 
 const {notify} = useNotification()
 

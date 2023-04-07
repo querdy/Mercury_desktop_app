@@ -13,10 +13,15 @@ const routes = [
     component: () => import('../views/VSEView.vue')
   },
   {
+    path: '/rawmilk',
+    name: 'rawmilk',
+    component: () => import('../views/RawMilkView.vue')
+  },
+  {
     path: '/settings',
     name: 'settings',
     component: () => import('../views/SettingsView.vue')
-  }
+  },
 ]
 
 const router = createRouter({

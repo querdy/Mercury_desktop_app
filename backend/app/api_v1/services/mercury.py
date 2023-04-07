@@ -52,7 +52,8 @@ class Mercury:
             product_link = product.get('href')
             if 'listProduced&stateMenu=2' in product_link:
                 traffic_pk = product_link.split('&')[1].split('=')[1]
-                product_name = product.getText().split('-')[0].strip()
+                raw_product_name = product.getText()
+                product_name = raw_product_name[:raw_product_name.rfind('-')].strip()
                 created_products.update({product_name: traffic_pk})
         return created_products
 
@@ -76,3 +77,4 @@ class Mercury:
 
 
 manager = Mercury()
+

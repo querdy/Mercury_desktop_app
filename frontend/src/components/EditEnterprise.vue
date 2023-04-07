@@ -26,6 +26,7 @@
         <tr :key="'research-'+indexResearch" v-for="(research, indexResearch) in state.edited_enterprise.researches">
           <td>
             <input class="table-input" type="text" v-model="state.edited_enterprise.researches[indexResearch].product">
+<!--                <textarea rows="3" v-model="state.edited_enterprise.researches[indexResearch].product"></textarea>-->
           </td>
           <td>
             <input class="table-input" type="text"

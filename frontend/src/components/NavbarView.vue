@@ -8,6 +8,9 @@
           <li class="nav-item mx-1">
             <router-link to="/vse">VSE</router-link>
           </li>
+<!--          <li class="nav-item mx-1">-->
+<!--            <router-link to="/rawmilk">RawMilk</router-link>-->
+<!--          </li>-->
           <li class="nav-item mx-1">
             <router-link to="/settings">Settings</router-link>
           </li>
